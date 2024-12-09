@@ -11,6 +11,8 @@
 import pygame
 from constants import *
 from player import Player
+from asteroid import *
+from asteroidfield import *
 
 # 1 Event Handling: Process all input events at the start of the loop.
 # 2 Game Logic Updates: Process your game state changes next.
@@ -20,6 +22,10 @@ from player import Player
 
 def main():
     pygame.init()
+    #create groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
     clock = pygame.time.Clock()
     dt = 0
     print("Starting asteroids!")
@@ -27,20 +33,27 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     # Create player in middle of screen
+    Player.containers = (updatable, drawable)
+    AsteroidField.containers = (updatable,)
+    Asteroid.containers = (asteroids, updatable, drawable)
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
     
-        # Fill screen with black
-        screen.fill("black")
-        
-        # Draw the player
-        player.draw(screen)
-        player.update(dt)
-        
-        # Flip the display
+        # 1. Update all objects in the 'updatable' group.
+        for sprite in updatable:
+            sprite.update(dt)  # Assuming 'dt' (delta time) is being passed if necessary
+
+        # 2. Clear the screen (fill with a background color, e.g., black)
+        screen.fill((0, 0, 0))
+
+        # 3. Draw all objects in the 'drawable' group.
+        for sprite in drawable:
+            sprite.draw(screen)
+
+        # 4. Refresh the display.
         pygame.display.flip()
         dt = clock.tick(60)/1000
 

@@ -9,6 +9,7 @@
 # into the current file
 # from module import *
 import pygame
+import sys
 from constants import *
 from player import Player
 from asteroid import *
@@ -46,6 +47,11 @@ def main():
         # 1. Update all objects in the 'updatable' group.
         for sprite in updatable:
             sprite.update(dt)  # Assuming 'dt' (delta time) is being passed if necessary
+        for asteroid in asteroids:  # asteroids is your sprite group
+            if player.collision(asteroid):
+                print("Game over!")
+                sys.exit()
+            
 
         # 2. Clear the screen (fill with a background color, e.g., black)
         screen.fill((0, 0, 0))

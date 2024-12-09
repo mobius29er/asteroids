@@ -8,18 +8,18 @@
 # import everything from a module
 # into the current file
 # from module import *
+# 1 Event Handling: Process all input events at the start of the loop.
+# 2 Game Logic Updates: Process your game state changes next.
+# 3 Screen Clearing: Use screen.fill((0, 0, 0)) early in the drawing phase to ensure a clean background for your new frame.
+# 4 Drawing Operations: Render all necessary game objects, text, and other visuals after clearing.
+# 5 Display Update: Finally, call pygame.display.update() to swap the newly prepared frame with the on-screen buffer, showing all updates to the player.
 import pygame
 import sys
 from constants import *
 from player import Player
 from asteroid import *
 from asteroidfield import *
-
-# 1 Event Handling: Process all input events at the start of the loop.
-# 2 Game Logic Updates: Process your game state changes next.
-# 3 Screen Clearing: Use screen.fill((0, 0, 0)) early in the drawing phase to ensure a clean background for your new frame.
-# 4 Drawing Operations: Render all necessary game objects, text, and other visuals after clearing.
-# 5 Display Update: Finally, call pygame.display.update() to swap the newly prepared frame with the on-screen buffer, showing all updates to the player.
+from shot import *
 
 def main():
     pygame.init()
@@ -27,6 +27,7 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
     clock = pygame.time.Clock()
     dt = 0
     print("Starting asteroids!")
@@ -37,6 +38,7 @@ def main():
     Player.containers = (updatable, drawable)
     AsteroidField.containers = (updatable,)
     Asteroid.containers = (asteroids, updatable, drawable)
+    Shot.containers = (updatable, drawable)
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     asteroid_field = AsteroidField()
     while True:
@@ -50,8 +52,7 @@ def main():
         for asteroid in asteroids:  # asteroids is your sprite group
             if player.collision(asteroid):
                 print("Game over!")
-                sys.exit()
-            
+                sys.exit()  
 
         # 2. Clear the screen (fill with a background color, e.g., black)
         screen.fill((0, 0, 0))
